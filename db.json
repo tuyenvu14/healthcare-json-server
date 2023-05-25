@@ -5,7 +5,106 @@
       "title": "blabla"
     }
   ],
-  "profile": {
-    "name": "typicode"
-  }
+  "symptoms": [
+    {
+      "id": 1,
+      "symptom": "Red Eye - Contact Lens User",
+      "todo": "Urgent-See a Doctor TODAY"
+    },
+    {
+      "id": 2,
+      "symptom": "Red Eye - Headache", 
+      "todo": "Urgent-See a Doctor TODAY"
+    },
+    {
+      "id": 3,
+      "symptom": "Red Eye - Nausea", 
+      "todo": "Urgent-See a Doctor TODAY"
+    },
+    {
+      "id": 4,
+      "symptom": "Red Eye - Vomiting", 
+      "todo": "Urgent-See a Doctor TODAY"
+    },
+    {
+      "id": 5,
+      "symptom": "Red Eye - One-sided only",
+      "todo": "Within 2-3 days"
+    },
+    {
+      "id": 6,
+      "symptom": "Red Eye - Duration > 1 week",
+      "todo": "Within 2-3 days"
+    },
+    {
+      "id": 7,
+      "symptom": "Red Eye - Progressively getting worse",
+      "todo": "Within 2-3 days"
+    },
+    {
+      "id": 8,
+      "symptom": "Red Eye - Both sides & Duration < 3-5 days",
+      "todo": "Observe another 1-2 days"
+    },
+    {
+      "id": 9,
+      "symptom": "Eye pain - Contact Lens User",
+      "todo": "Urgent-See a Doctor TODAY"
+    },
+    {
+      "id": 10,
+      "symptom": "Eye pain - Headache",
+      "todo": "Urgent-See a Doctor TODAY"
+    },
+    {
+      "id": 11,
+      "symptom": "Eye pain - Nausea",
+      "todo": "Urgent-See a Doctor TODAY"
+    },
+    {
+      "id": 12,
+      "symptom": "Eye pain - Vomiting",
+      "todo": "Urgent-See a Doctor TODAY"
+    },
+    {
+      "id": 13,
+      "symptom": "Eye pain - Vomiting",
+      "todo": "Urgent-See a Doctor TODAY"
+    },
+    {
+      "id": 13,
+      "symptom": "Eye pain - severity >8/10 or severe enough to prevent one from usual activities",
+      "todo": "Urgent-See a Doctor TODAY"
+    },
+    {
+      "id": 14,
+      "symptom": "Eye pain - severity >5/10 to 7/10 or severe enough to distract one from usual activities",
+      "todo": "Within 2-3 days"
+    },
+    {
+      "id": 14,
+      "symptom": "Eye pain - One-sided only",
+      "todo": "Within 2-3 days"
+    },
+    {
+      "id": 15,
+      "symptom": "Eye pain - Duration > 1 week",
+      "todo": "Within 2-3 days"
+    },
+    {
+      "id": 15,
+      "symptom": "Eye pain - Progressively getting worse",
+      "todo": "Within 2-3 days"
+    },
+    {
+      "id": 16,
+      "symptom": "Eye pain - Both sides & Duration < 3-5 days",
+      "todo": "Observe another 1-2 days"
+    },
+    {
+      "id": 17,
+      "symptom": "Eye pain - Both sides & Severity < 5/10 or not affecting ones usual activities",
+      "todo": "Observe another 1-2 days"
+    }
+  ]
 }
