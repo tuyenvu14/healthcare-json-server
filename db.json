@@ -1,8 +1,48 @@
 {
-  "posts": [
+  "categories": [
     {
       "id": 1,
-      "title": "blabla"
+      "name": "Recently Treated by a Dr"
+    },
+    {
+      "id": 2,
+      "name": "Fever or Feeling Unwell"
+    },
+    {
+      "id": 3,
+      "name": "Head/Neuro"
+    },
+    {
+      "id": 4,
+      "name": "Chest"
+    },
+    {
+      "id": 5,
+      "name": "Abdomen/Pelvis/Genitalia"
+    },
+    {
+      "id": 6,
+      "name": "Eyes"
+    },
+    {
+      "id": 7,
+      "name": "Ears/Nose/Throat/Mouth"
+    },
+    {
+      "id": 8,
+      "name": "Back & Limbs"
+    },
+    {
+      "id": 9,
+      "name": "Skin/Wounds/Injuries"
+    },
+    {
+      "id": 10,
+      "name": "Mental Health & Other Pain"
+    },
+    {
+      "id": 11,
+      "name": "Other general symptoms"
     }
   ],
   "symptoms": [
@@ -13,17 +53,17 @@
     },
     {
       "id": 2,
-      "symptom": "Red Eye - Headache", 
+      "symptom": "Red Eye - Headache",
       "todo": "Urgent-See a Doctor TODAY"
     },
     {
       "id": 3,
-      "symptom": "Red Eye - Nausea", 
+      "symptom": "Red Eye - Nausea",
       "todo": "Urgent-See a Doctor TODAY"
     },
     {
       "id": 4,
-      "symptom": "Red Eye - Vomiting", 
+      "symptom": "Red Eye - Vomiting",
       "todo": "Urgent-See a Doctor TODAY"
     },
     {
