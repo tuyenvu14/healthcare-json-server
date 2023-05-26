@@ -1,0 +1,741 @@
+<title>Roland's Triage</title>
+<script>
+    const symptoms = [];
+
+    function add_option(option, label) {
+        var option = document.createElement("option");
+        option.setAttribute("value", option);
+        option.innerHTML = label;
+        option.value = label;
+
+        return option;
+    }
+
+    function remove_options(s) {
+        var i, L = s.options.length - 1;
+        for (i = L; i >= 0; i--) {
+            s.remove(i);
+        }
+    }
+
+    function populate_categories(o) {
+        var s = document.getElementsByClassName("categories");
+        for (var i = 0; i < s.length; i++) {
+            for (var j = 0; j < o.length; j++) {
+                s[i].options.add(add_option(o[j], o[j]));
+            }
+        }
+    }
+
+    function populate_subcategories(o) {
+        var s = document.getElementsByClassName("subcategories");
+        for (var i = 0; i < s.length; i++) {
+            for (var j = 0; j < o.length; j++) {
+                s[i].options.add(add_option(o[j], o[j]));
+            }
+        }
+    }
+
+    function pick_symptom(cb) {
+
+        pPriority.innerHTML = "";
+
+        if (cb.checked == true) {
+            var slen = symptoms.length;
+            symptoms[slen] = cb.id + "::" + cb.value;
+        }
+        else {
+            var i = symptoms.indexOf(cb.id + "::" + cb.value);
+            symptoms.splice(i, 1);
+        }
+
+        var sp_pairs = "";
+        for (let i = 0; i < symptoms.length; i++) {
+            sp_pairs = sp_pairs + "||" + symptoms[i];
+        }
+		
+        if (sp_pairs.includes("::Urgent-Call Emergency Ambulance") == true) {
+            pPriority.innerHTML = "Urgent-Call Emergency Ambulance";
+            return;
+        }
+
+        if (sp_pairs.includes("::Urgent-See a Doctor TODAY within 2-3 hours") == true) {
+            pPriority.innerHTML = "Urgent-See a Doctor TODAY within 2-3 hours";
+            return;
+        }
+		
+        if (sp_pairs.includes("::Urgent-See a Doctor TODAY") == true) {
+            pPriority.innerHTML = "Urgent-See a Doctor TODAY";
+            return;
+        }
+
+        if (sp_pairs.includes("::Within 2-3 days") == true) {
+            pPriority.innerHTML = "Within 2-3 days";
+            return;
+        }
+
+        if (sp_pairs.includes("::Likely simple Urine Tract Infection if without fever or abdominal/loin pain. Consider antibiotics & see Dr if not better after 2 days") == true) {
+            pPriority.innerHTML = "Likely simple Urine Tract Infection if without fever or abdominal/loin pain. Consider antibiotics & see Dr if not better after 2 days";
+            return;
+        }
+
+        if (sp_pairs.includes("::Observe another 1-2 days") == true) {
+            pPriority.innerHTML = "Observe another 1-2 days";
+            return;
+        }
+
+        if (sp_pairs.includes("::Wait up to 2 weeks - may consider backpocket antibiotics if not better after 10 days, esp with dark phlegm") == true) {
+            pPriority.innerHTML = "Wait up to 2 weeks - may consider backpocket antibiotics if not better after 10 days, esp with dark phlegm";
+            return;
+        }
+
+        if (sp_pairs.includes("::Wait up to 2 weeks, can consider physiotherapy in the meantime") == true) {
+            pPriority.innerHTML = "Wait up to 2 weeks, can consider physiotherapy in the meantime";
+            return;
+        }
+
+         if (sp_pairs.includes("::Wait up to 2 weeks, abstain from sexual contact until your medical appointment") == true) {
+            pPriority.innerHTML = "Wait up to 2 weeks, abstain from sexual contact until your medical appointment";
+            return;
+        }
+
+        if (sp_pairs.includes("::Wait up to 2 weeks") == true) {
+            pPriority.innerHTML = "Wait up to 2 weeks";
+            return;
+        }
+    }
+
+    function add_checkbox(s, p) {
+        if (s !== "") {
+            var cb = document.createElement("input");
+            cb.setAttribute("type", "checkbox");
+            cb.setAttribute("id", s);
+            cb.setAttribute("value", p);
+            cb.setAttribute("name", "symptoms");
+            cb.setAttribute("onclick", "pick_symptom(this)");
+
+            var lbl = document.createElement("label");
+            lbl.setAttribute("for", s);
+
+            lbl.appendChild(document.createTextNode(s));
+
+            pSymptoms.appendChild(cb);
+            pSymptoms.appendChild(lbl);
+
+            var lb = document.createElement("br");
+            pSymptoms.appendChild(lb);
+        }
+    }
+
+    function load_categories() {
+        var o = ["Recently Treated by a Dr", "Fever or Feeling Unwell", "Head/Neuro", "Chest", "Abdomen/Pelvis/Genitalia", "Eyes", "Ears/Nose/Throat/Mouth", "Back & Limbs", "Skin/Wounds/Injuries", "Mental Health & Other Pain", "Other general symptoms"]
+        populate_categories(o);
+    }
+
+    function load_subcategories() {
+        pPriority.innerHTML = "";
+        symptoms.length = 0;
+
+        var p = document.getElementById("pSymptoms");
+        while (p.firstChild) {
+            var cb = p.firstChild; p.removeChild(cb);
+        };
+
+        var c = document.getElementById("selCategories").value;
+        remove_options(document.getElementById('selSubcategories'));
+        switch (c) {
+            case "Recently Treated by a Dr":
+                var o = ["But not getting better, or worse after treatment"]
+                populate_subcategories(o);
+                break;
+            case "Fever or Feeling Unwell":
+                var o = ["Fever/Unwell(>5yrs old)", "Fever/Unwell(<5yrs old)"]
+                populate_subcategories(o);
+                break;
+            case "Head/Neuro":
+                var o = ["Headache", "Neck pain", "Giddiness", "Other head/neuro symptoms"]
+                populate_subcategories(o);
+                break;
+            case "Chest":
+                var o = ["Chest Pain or Tightness", "Breast", "Heartburn", "Shortness of breath", "Palpitations", "Cough"]
+                populate_subcategories(o);
+                break;
+            case "Abdomen/Pelvis/Genitalia":
+                var o = ["Abdominal pain", "Nausea/vomiting", "Other abdominal/bowel symptoms", "Urinary/Bladder", "Incontinence of urine/bowel", "Male sex organs", "Female sex organs"]
+                populate_subcategories(o);
+                break;
+            case "Eyes":
+                var o = ["Red/Painful Eye", "Other Eye Symptoms"]
+                populate_subcategories(o);
+                break;
+            case "Ears/Nose/Throat/Mouth":
+                var o = ["Ear/Nose/Throat/Mouth pain", "Neck pain", "Jaw pain", "Other Ear/Nose/Throat"]
+                populate_subcategories(o);
+                break;
+            case "Back & Limbs":
+                var o = ["Back", "Shoulder/Upper Arm Pain", "Limbs(other than shoulder/upper arm pain)", "Limb swelling"]
+                populate_subcategories(o);
+                break;
+            case "Skin/Wounds/Injuries":
+                var o = ["Skin", "Trauma/Wounds/Bleeding"]
+                populate_subcategories(o);
+                break;
+            case "Mental Health & Other Pain":
+                var o = ["Mental health", "Other pain"]
+                populate_subcategories(o);
+                break;
+            case "Other general symptoms":
+                var o = ["Other miscellaneous"]
+                populate_subcategories(o);
+                break;
+        }
+    }
+
+    function load_symptoms() {
+        pPriority.innerHTML = "";
+
+        var p = document.getElementById("pSymptoms");
+        while (p.firstChild) {
+            var cb = p.firstChild; p.removeChild(cb);
+        };
+
+        var c = document.getElementById("selCategories").value;
+        var sc = document.getElementById("selSubcategories").value;
+        switch (c) {
+            case "Recently Treated by a Dr":
+                switch (sc) {
+                    case "But not getting better, or worse after treatment":
+                        add_checkbox("Unless you fulfil more urgent criteria below you should be seen", "Within 2-3 days");
+                        break;
+                }
+                break;
+            case "Fever or Feeling Unwell":
+                switch (sc) {
+                    case "Fever/Unwell(>5yrs old)":
+                        add_checkbox(">40 degrees celsius or > 104 degrees fahrenheit", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Rigors (Shakes)", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Jaundice (yellowing of eyes/skin)", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Pale clay colored stools", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Rash", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Open wound", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Stiff neck", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Photophobia(sensitivity to light)", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Joint/Limb swelling", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Lower limb swelling", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Duration > 3-5 days", "Within 2-3 days");
+                        add_checkbox("Blood in urine", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Pain on urination", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Difficulty passing urine", "Within 2-3 days");
+                        add_checkbox("Poor stream of urine", "Within 2-3 days");
+                        add_checkbox("Abnormal vaginal bleeding", "Within 2-3 days");
+                        add_checkbox("Abnormal vaginal discharge", "Within 2-3 days");
+                        add_checkbox("Abnormal penile discharge", "Within 2-3 days");
+                        add_checkbox("Duration < 3 days", "Observe another 1-2 days");
+                        break;
+                    case "Fever/Unwell(<5yrs old)":
+                        add_checkbox(">38 degrees celsius or > 100.4 degrees fahrenheit in child < 3 mths", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox(">39 degrees celsius or > 102.2 degrees fahrenheit in child 3-6 mths", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox(">40 degrees celsius or > 104 degrees fahrenheit in child > 6 mths", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Rigors (Shakes)", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Duration > 3-5 days", "Urgent-See a Doctor TODAY");
+                        add_checkbox("not responding normally to social cues", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("drowsy(wakes only with prolonged stimulation)", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("decreased activity", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heart rate > 140-160/min", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heart rate > 160/min", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Flaring of nostrils, straining of neck muscles or abdominal retractions", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("breathing rate > 40-50/min", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("breathing rate > 50/min", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("saturations < 95%", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("no urine output > 6 hours", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Jaundice (yellowing of eyes/skin)", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Pale clay colored stools", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Rash", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Open wound", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Joint/Limb swelling", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Not moving limb/extremity", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Duration < 3 days", "Observe another 1-2 days");
+                }
+                break;
+            case "Head/Neuro":
+                switch (sc) {
+                    case "Headache":
+                        add_checkbox("Blood Pressure < 90/60", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Blood Pressure > 180/110", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Blood pressure > 160/100 to 180/110", "Within 2-3 days");
+                        add_checkbox("Sudden onset (like a thunderclap)", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Recent trauma in the preceding few weeks", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Stiff neck", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Photophobia(sensitivity to light)", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Vomiting", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Pain on chewing", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Scalp tenderness", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Severity >5/10 to 7/10 or severe enough to distract one from usual activities", "Within 2-3 days");
+                        add_checkbox("Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Severity < 5/10 or not affecting ones usual activities", "Wait up to 2 weeks");
+                        break;
+                    case "Neck pain":
+                        add_checkbox("Radiating to jaw, neck or shoulder", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Crushing", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Sudden onset", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Duration > 15 minutes", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Progressively getting worse", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Not relieved by rest", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Shortness of breath", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Palpitations", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Giddiness", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Blood Pressure < 90/60", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Blood Pressure > 180/110", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Blood pressure > 160/100 to 180/110", "Within 2-3 days");
+                        add_checkbox("Duration of <10-15 minutes that does not persist", "Within 2-3 days");
+                        add_checkbox("Resolves within a short while on resting", "Within 2-3 days");
+                        break;
+                    case "Giddiness":
+                        add_checkbox("Blood Pressure < 90/60", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Blood Pressure > 180/110", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Blood pressure > 160/100 to 180/110", "Within 2-3 days");
+                        add_checkbox("Persistent(Not relieved by rest of staying still)", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("On standing upright from seated or lying position", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Sweating", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Palpitations", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Tremors", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Vision going dark", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Duration of <10-15 minutes that does not persist", "Wait up to 2 weeks");
+                        add_checkbox("Resolves within a short while on resting", "Wait up to 2 weeks");
+                        break;
+                    case "Other head/neuro symptoms":
+                        add_checkbox("Loss of Consciousness", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Drowsiness", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Acute Confusion", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Seizure (suspected or confirmed)", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Slurring of speech", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Facial drooping", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("One-sided numbness or weakness", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Suspected seizure with no loss of consciousness", "Within 2-3 days");
+                        add_checkbox("Stiff neck", "Wait up to 2 weeks");
+                        add_checkbox("Photophobia (sensitivity to light)", "Wait up to 2 weeks");
+                        add_checkbox("Tremors, shakes", "Wait up to 2 weeks");
+                        break;
+                }
+                break;
+            case "Chest":
+                switch (sc) {
+                    case "Chest Pain or Tightness":
+                        add_checkbox("Chest pain or chest tightness - Radiating to jaw, neck or shoulder", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Chest pain or chest tightness - Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Chest pain or chest tightness - Crushing", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Chest pain or chest tightness - Sudden onset", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Chest pain or chest tightness - Duration > 15 minutes", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Chest pain or chest tightness - Progressively getting worse", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Chest pain or chest tightness - Not relieved by rest", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Chest pain or chest tightness - Shortness of breath", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Chest pain or chest tightness - Palpitations", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Chest pain or chest tightness - Giddiness", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Chest pain or chest tightness - Duration of <10-15 minutes that does not persist", "Within 2-3 days");
+                        add_checkbox("Chest pain or chest tightness - Resolves within a short while on resting", "Within 2-3 days");
+                        break;
+                    case "Breast":
+                        add_checkbox("Breast pain - Radiating to jaw, neck or shoulder", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Breast pain - Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Breast pain - Crushing", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Breast pain - Sudden onset", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Breast pain - Duration > 15 minutes", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Breast pain - Progressively getting worse", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Breast pain - Not relieved by rest", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Breast pain - Shortness of breath", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Breast pain - Palpitations", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Breast pain - Giddiness", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Breast pain - Duration of <10-15 minutes that does not persist", "Within 2-3 days");
+                        add_checkbox("Breast pain - Resolves within a short while on resting", "Within 2-3 days");
+                        add_checkbox("Breast lump in the absence of pain", "Wait up to 2 weeks");
+                        add_checkbox("Nipple discharge in the absence of pain", "Wait up to 2 weeks");
+                        break;
+                    case "Heartburn":
+                        add_checkbox("Heartburn - Radiating to jaw, neck or shoulder", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heartburn - Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Heartburn - Crushing", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Heartburn - Sudden onset", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Heartburn - Duration > 15 minutes", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Heartburn - Progressively getting worse", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heartburn - Not relieved by rest", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heartburn - Shortness of breath", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heartburn - Palpitations", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heartburn - Giddiness", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heartburn - Duration of <10-15 minutes that does not persist", "Within 2-3 days");
+                        add_checkbox("Heartburn - Resolves within a short while on resting", "Within 2-3 days");
+                        break;
+                    case "Shortness of breath":
+                        add_checkbox("Duration > 15 minutes", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Even at rest", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Sudden onset", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Progressively getting worse", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Saturations < 92%(adult) or < 95% (children)", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Respiratory rate > 30-35/minute in adults, > 40-50/minute in children < 5yrs old", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Respiratory rate > 35/minute in adults, > 50/minute in children < 5yrs old", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Flaring of nostrils, straining of neck muscles or abdominal retractions", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Not relieved by rest", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Duration < 10-15 minutes that does not persist", "Within 2-3 days");
+                        add_checkbox("Resolves within a short while on resting", "Within 2-3 days");
+                        break;
+                    case "Palpitations":
+                        add_checkbox("Heart rate >120-160/minute for > 5 yr olds", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heart rate >140-160/minute for children < 5 yrs old", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heart rate >160/minute", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Heart rate 30-50/minute", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heart rate <30/minute", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Irregular rhythm", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Heart rate between 100 to 120/minute", "Within 2-3 days");
+                        add_checkbox("Heart rate between 50 to 60/minute", "Within 2-3 days");
+                        add_checkbox("Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Heart rate between 60 to 100/minute", "Wait up to 2 weeks");
+                        break;
+                    case "Cough":
+                        add_checkbox("Blood in sputum - large amounts", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Blood in sputum - small amounts", "Within 2-3 days");
+                        add_checkbox("Cough", "Wait up to 2 weeks - may consider backpocket antibiotics if not better after 10 days, esp with dark phlegm");
+                        break;
+                }
+                break;
+            case "Abdomen/Pelvis/Genitalia":
+                switch (sc) {
+                    case "Abdominal pain":
+                        add_checkbox("Continuous pain & duration > 30 minutes", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Gets worse with movement/coughing", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Fever & Jaundice", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Pregnant", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Duration < 30 minutes that does not persist", "Within 2-3 days");
+                        add_checkbox("Severity >5/10 to 7/10 or severe enough to distract one from usual activities", "Within 2-3 days");
+                        add_checkbox("Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Jaundice (yellowing of eyes/skin)", "Within 2-3 days");
+                        break;
+                    case "Nausea/vomiting":
+                        add_checkbox("Coffee grounds vomitus", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Fresh blood (large amounts, not drops/stains)", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Unable to retain fluids", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Blood stains (small amounts)", "Within 2-3 days");
+                        add_checkbox("Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Duration > 1 week", "Within 2-3 days");
+                        add_checkbox("Duration < 3-5 days & able to retain fluids, not dehydrated", "Observe another 1-2 days");
+                        add_checkbox("Nausea no vomiting", "Wait up to 2 weeks");
+                        break;
+                    case "Other abdominal/bowel symptoms":
+                        add_checkbox("Abnormal stools - Large amounts fresh red blood", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Abnormal stools - Black tarry stools", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Abnormal stools - Blood stains (small amounts)", "Within 2-3 days");
+                        add_checkbox("Abnormal stools - Diarrhea > 5 days", "Within 2-3 days");
+                        add_checkbox("Abnormal stools - No stools > 5 days", "Within 2-3 days");
+                        add_checkbox("Abnormal stools - Change from usual habits", "Wait up to 2 weeks");
+                        add_checkbox("Abnormal stools - Mucus in stools", "Wait up to 2 weeks");
+                        add_checkbox("No stools > 5 days", "Within 2-3 days");
+                        add_checkbox("Bloating", "Wait up to 2 weeks");
+                        add_checkbox("Abdominal distension in the absence of pain", "Wait up to 2 weeks");
+                        break;
+                    case "Urinary/Bladder":
+                        add_checkbox("No urination > 12 hours", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Blood in urine", "Within 2-3 days");
+                        add_checkbox("Pain on urination", "Likely simple Urine Tract Infection if without fever or abdominal/loin pain. Consider antibiotics & see Dr if not better after 2 days");
+                        add_checkbox("Urgency of urination", "Likely simple Urine Tract Infection if without fever or abdominal/loin pain. Consider antibiotics & see Dr if not better after 2 days");
+                        add_checkbox("Frequency of urination", "Likely simple Urine Tract Infection if without fever or abdominal/loin pain. Consider antibiotics & see Dr if not better after 2 days");
+                        add_checkbox("Difficulty passing urine", "Wait up to 2 weeks");
+                        add_checkbox("Poor stream of urine", "Wait up to 2 weeks");
+                        add_checkbox("Getting up to pass urine at night", "Wait up to 2 weeks");
+                        add_checkbox("Increased volume of urine", "Wait up to 2 weeks");
+                        break;
+                    case "Incontinence of urine/bowel":
+                        add_checkbox("New or sudden onset", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Weakness in lower limbs", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Numbness in perineal/perianal region", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Not new or sudden onset", "Wait up to 2 weeks");
+                        break;
+                    case "Male sex organs":
+                        add_checkbox("Testicular pain - Constant pain & Duration > 15 minutes", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Testicular pain - Severity >5/10 or severe enough to affect one from performing usual activities", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Testicular pain - Nausea no vomiting", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Testicular pain - Vomiting", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Testicular pain - Gets worse with movement/coughing", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Testicular pain - Duration of <10-15 minutes that does not persist", "Within 2-3 days");
+                        add_checkbox("Testicular pain - Severity < 5/10 or not affecting ones usual activities", "Within 2-3 days");
+                        add_checkbox("Testicular pain - Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Testicular lump in the absence of pain", "Wait up to 2 weeks");
+                        add_checkbox("Groin lump in the absence of pain", "Wait up to 2 weeks");
+                        add_checkbox("Genital Ulcers", "Within 2-3 days");
+                        add_checkbox("Erectile dysfunction", "Wait up to 2 weeks");
+                        add_checkbox("Loss of libido", "Wait up to 2 weeks");
+                        add_checkbox("Premature ejaculation", "Wait up to 2 weeks");
+                        add_checkbox("Blood in semen", "Wait up to 2 weeks");
+                        add_checkbox("Abnormal penile discharge", "Wait up to 2 weeks, abstain from sexual contact until your medical appointment");
+                        break;
+                    case "Female sex organs":
+                        add_checkbox("Abnormal vaginal bleeding - Pregnant", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Abnormal vaginal bleeding - Large amounts", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Abnormal vaginal bleeding - Small amounts", "Wait up to 2 weeks, abstain from sexual contact until your medical appointment");
+                        add_checkbox("Abnormal vaginal discharge - Pregnant", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Abnormal vaginal discharge - No fever or pain", "Wait up to 2 weeks, abstain from sexual contact until your medical appointment");
+                        add_checkbox("Genital Ulcers - Pregnant", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Genital Ulcers", "Within 2-3 days");
+                        add_checkbox("Loss of libido", "Wait up to 2 weeks");
+                        add_checkbox("Pain on intercourse", "Wait up to 2 weeks");
+                        break;
+                }
+                break;
+            case "Eyes":
+                switch (sc) {
+                    case "Red/Painful Eye":
+                        add_checkbox("Red Eye - Contact Lens User", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Red Eye - Headache", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Red Eye - Nausea", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Red Eye - Vomiting", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Red Eye - One-sided only", "Within 2-3 days");
+                        add_checkbox("Red Eye - Duration > 1 week", "Within 2-3 days");
+                        add_checkbox("Red Eye - Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Red Eye - Both sides & Duration < 3-5 days", "Observe another 1-2 days");
+                        add_checkbox("Eye pain - Contact Lens User", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Eye pain - Headache", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Eye pain - Nausea", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Eye pain - Vomiting", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Eye pain - severity >8/10 or severe enough to prevent one from usual activities", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Eye pain - severity >5/10 to 7/10 or severe enough to distract one from usual activities", "Within 2-3 days");
+                        add_checkbox("Eye pain - One-sided only", "Within 2-3 days");
+                        add_checkbox("Eye pain - Duration > 1 week", "Within 2-3 days");
+                        add_checkbox("Eye pain - Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Eye pain - Both sides & Duration < 3-5 days", "Observe another 1-2 days");
+                        add_checkbox("Eye pain - Both sides & Severity < 5/10 or not affecting ones usual activities", "Observe another 1-2 days");
+                        break;
+                    case "Other Eye Symptoms":
+                        add_checkbox("Double vision", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Any acute or recent loss of vision", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Any recent trauma/injury to the eye", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Significant eye swelling", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Eye discharge - Duration > 1 week", "Within 2-3 days");
+                        add_checkbox("Eye discharge - Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Eye discharge - Duration < 3-5 days", "Observe another 1-2 days");
+                        add_checkbox("Floaters or flashes in vision - New or sudden onset", "Within 2-3 days");
+                        add_checkbox("Floaters or flashes in vision - Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Floaters or flashes in vision - Not new or sudden onset and not getting worse", "Wait up to 2 weeks");
+                        add_checkbox("Change in visual acuity with no loss of vision", "Wait up to 2 weeks");
+                        add_checkbox("Eyelid lumps or bumps only with no significant eye swelling", "Wait up to 2 weeks");
+                        add_checkbox("Jaundice (yellowing of eyes/skin)", "Wait up to 2 weeks");
+                        break;
+                }
+                break;
+            case "Ears/Nose/Throat/Mouth":
+                switch (sc) {
+                    case "Ear/Nose/Throat/Mouth pain":
+                        add_checkbox("Nose/Throat/Mouth pain - Severity >8/10 or severe enough to prevent one from eating/drinking", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Nose/Throat/Mouth pain - Severity>5/10 to 7/10 or severe enough to cause significant discomfort eating/drinking", "Within 2-3 days");
+                        add_checkbox("Nose/Throat/Mouth pain - Duration > 1 week", "Within 2-3 days");
+                        add_checkbox("Nose/Throat/Mouth pain - Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Nose/Throat/Mouth pain - Duration < 3-5 days", "Observe another 1-2 days");
+                        add_checkbox("Sensation of food getting stuck in throat or chest in the absence of pain", "Wait up to 2 weeks");
+                        add_checkbox("Ear pain - Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Ear pain - Severity >5/10 to 7/10 or severe enough to distract one from usual activities", "Within 2-3 days");
+                        add_checkbox("Ear pain - Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Ear pain - Severity < 5/10 or not affecting ones usual activities", "Wait up to 2 weeks");
+                        add_checkbox("Significant ear swelling", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Ear discharge in the absence of pain or fever", "Wait up to 2 weeks");
+                        break;
+                    case "Neck pain":
+                        add_checkbox("Radiating to jaw, neck or shoulder", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Crushing", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Sudden onset", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Duration > 15 minutes", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Progressively getting worse", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Not relieved by rest", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Shortness of breath", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Palpitations", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Giddiness", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Blood Pressure < 90/60", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Blood Pressure > 180/110", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Blood pressure > 160/100 to 180/110", "Within 2-3 days");
+                        add_checkbox("Duration of <10-15 minutes that does not persist", "Within 2-3 days");
+                        add_checkbox("Resolves within a short while on resting", "Within 2-3 days");
+                        break;
+                    case "Jaw pain":
+                        add_checkbox("Radiating to jaw, neck or shoulder", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Crushing", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Sudden onset", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Duration > 15 minutes", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Progressively getting worse", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Not relieved by rest", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Shortness of breath", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Palpitations", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Giddiness", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Blood Pressure < 90/60", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Blood Pressure > 180/110", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Blood pressure > 160/100 to 180/110", "Within 2-3 days");
+                        add_checkbox("Duration of <10-15 minutes that does not persist", "Within 2-3 days");
+                        add_checkbox("Resolves within a short while on resting", "Within 2-3 days");
+                        break;
+                    case "Other Ear/Nose/Throat":
+                        add_checkbox("Significant ear swelling", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Hearing loss - Sudden or recent onset within 1-3 weeks", "Within 2-3 days");
+                        add_checkbox("Hearing loss - Onset > months ago", "Wait up to 2 weeks");
+                        add_checkbox("Tinnitus or ringing/whooshing sounds in ear - Sudden or recent onset within 1-3 weeks", "Within 2-3 days");
+                        add_checkbox("Tinnitus or ringing/whooshing sounds in ear - Onset > months ago", "Wait up to 2 weeks");
+                        add_checkbox("Ear discharge in the absence of pain or fever", "Wait up to 2 weeks");
+                        add_checkbox("Runny nose or blocked nose in the absence of pain or fever", "Wait up to 2 weeks - may consider backpocket antibiotics if not better after 10 days, esp with dark phlegm");
+                        add_checkbox("Sensation of food getting stuck in throat or chest in the absence of pain", "Wait up to 2 weeks");
+                        add_checkbox("Neck swelling or lump in the absence of pain", "Wait up to 2 weeks");
+                        break;
+                }
+                break;
+            case "Back & Limbs":
+                switch (sc) {
+                    case "Back":
+                        add_checkbox("Back pain & severity >8/10 or severe enough to prevent one from usual activities", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Back pain & incontinence of urine/bowel", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Back pain & weakness in lower limbs", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Back pain & numbness in perineal/perianal region", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Back pain & severity >5/10 to 7/10 or severe enough to distract one from usual activities", "Within 2-3 days");
+                        add_checkbox("Back pain & progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Back pain & severity <5/10 or not affecting ones usual activities", "Wait up to 2 weeks, can consider physiotherapy in the meantime");
+                        break;
+                    case "Shoulder/Upper Arm Pain":
+                        add_checkbox("Inability to move arm", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Radiating to jaw, neck or shoulder", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Crushing", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Sudden onset", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Duration > 15 minutes", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Progressively getting worse", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Not relieved by rest", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Shortness of breath", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Palpitations", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Giddiness", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Blood Pressure < 90/60", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Blood Pressure > 180/110", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Blood pressure > 160/100 to 180/110", "Within 2-3 days");
+                        add_checkbox("Duration of <10-15 minutes that does not persist", "Within 2-3 days");
+                        add_checkbox("Resolves within a short while on resting", "Within 2-3 days");
+                        break;
+                    case "Limbs(other than shoulder/upper arm pain)":
+                        add_checkbox("Joint/Limb pain & severity >8/10 or severe enough to prevent one from usual activities", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Joint/Limb pain & not relieved by rest", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Joint/Limb pain & severity >5/10 to 7/10 or severe enough to distract one from usual activities", "Within 2-3 days");
+                        add_checkbox("Joint/Limb pain & severity <5/10 or not affecting ones usual activities", "Wait up to 2 weeks, can consider physiotherapy in the meantime");
+                        add_checkbox("Achilles pain - sudden onset after injury", "Urgent-See a Doctor TODAY");
+                        add_checkbox("One-sided numbness or weakness", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Weakness in lower limbs & inability to walk", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Weakness in lower limbs & severity >8/10 or severe enough to prevent one from usual activities", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Paralysis", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Weakness in lower limbs & progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Weakness in lower limbs & severity >5/10 to 7/10 or severe enough to distract one from usual activities", "Within 2-3 days");
+                        add_checkbox("Weakness in lower limbs & not severe enough to affect usual activities", "Wait up to 2 weeks");
+                        add_checkbox("Tremors, shakes", "Wait up to 2 weeks");
+                        add_checkbox("Numbness in limbs", "Wait up to 2 weeks");
+                        break;
+                    case "Limb swelling":
+                        add_checkbox("One-sided", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Chest pain", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Shortness of breath", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Palpitations", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heart rate >120-160/minute", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Heart rate >160/minute", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Giddiness", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Joint/Limb swelling in the absence of fever, pain or other symptoms", "Wait up to 2 weeks");
+                        break;
+                }
+                break;
+            case "Skin/Wounds/Injuries":
+                switch (sc) {
+                    case "Skin":
+                        add_checkbox("Rash - Involving > 30% of body surface area", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Rash - Involving ulcers on lips or genitals", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Rash - Significant eye swelling", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Rash - Lip swelling", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Rash - Shortness of breath", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Rash - Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Rash - Involving > 30% of body surface area", "Wait up to 2 weeks");
+                        add_checkbox("Skin lump/swelling in the absence of pain", "Wait up to 2 weeks");
+                        add_checkbox("Skin ulcer in the absence of infection, contamination or deep injury", "Wait up to 2 weeks");
+                        add_checkbox("Bruises on skin in the absence of other bleeding sources or other symptoms", "Wait up to 2 weeks");
+                        add_checkbox("Skin pigmentation or discolouration", "Wait up to 2 weeks");
+                        break;
+                    case "Trauma/Wounds/Bleeding":
+                        add_checkbox("Significant trauma e.g. head injury, chest/abdominal injury, limb/spinal/pelvic fractures", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Any open wound with possible contamination e.g. tetanus/rabies", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Any open wound with suspected deep tendon/nerve injury, vessel injury or bone fracture", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Any open wound with possible infection e.g discharge/swelling/redness", "Within 2-3 days");
+                        add_checkbox("Any open wound with slow healing e.g not better after 1-2 weeks", "Within 2-3 days");
+                        add_checkbox("Bleeding from any part of the body that is in large amounts", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Bleeding that has not stopped after 1 hour", "Urgent-See a Doctor TODAY within 2-3 hours");
+                        add_checkbox("Bruises on skin in the absence of other bleeding sources or other symptoms", "Wait up to 2 weeks");
+                        break;
+                }
+                break;
+            case "Mental Health & Other Pain":
+                switch (sc) {
+                    case "Mental health":
+                        add_checkbox("Any ongoing thoughts of harming yourself or others", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Any danger of one harming oneself or others", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Severe depression/anxiety", "Within 2-3 days");
+                        add_checkbox("Hallucinations or delusions", "Within 2-3 days");
+                        add_checkbox("Recent change in behaviour or personality", "Within 2-3 days");
+                        add_checkbox("Mood problems not impairing usual activities or coping function", "Wait up to 2 weeks");
+                        add_checkbox("Poor sleep", "Wait up to 2 weeks");
+                        break;
+                    case "Other pain":
+                        add_checkbox("Severity >8/10 or severe enough to prevent one from usual activities", "Urgent-See a Doctor TODAY");
+                        add_checkbox("Paralysis", "Urgent-Call Emergency Ambulance");
+                        add_checkbox("Severity >5/10 to 7/10 or severe enough to distract one from usual activities", "Within 2-3 days");
+                        add_checkbox("Progressively getting worse", "Within 2-3 days");
+                        add_checkbox("Severity < 5/10 or not affecting ones usual activities", "Wait up to 2 weeks, can consider physiotherapy in the meantime");
+                        break;
+                }
+                break;
+            case "Other general symptoms":
+                switch (sc) {
+                    case "Other miscellaneous":
+                        add_checkbox("Increase in appetite", "Wait up to 2 weeks");
+                        add_checkbox("Increase in weight", "Wait up to 2 weeks");
+                        add_checkbox("Loss of appetite", "Wait up to 2 weeks");
+                        add_checkbox("Loss of weight", "Wait up to 2 weeks");
+                        add_checkbox("Hot flushes in the absence of fever", "Wait up to 2 weeks");
+                        add_checkbox("Sweating in the absence of fever", "Wait up to 2 weeks");
+                        add_checkbox("Feeling hot in the absence of fever", "Wait up to 2 weeks");
+                        add_checkbox("Feeling cold in the absence of fever", "Wait up to 2 weeks");
+                        add_checkbox("Increased hair growth", "Wait up to 2 weeks");
+                        add_checkbox("Hair loss", "Wait up to 2 weeks");
+                        break;
+                }
+                break;
+        }
+    }
+</script>
+<body onload="load_categories()">
+    <h2>Roland's Triage v0.04</h2>
+    <table>
+        <tr>
+            <td valign="top">Please choose a category: </td>
+            <td>
+                <select id="selCategories" onchange="load_subcategories()" class="categories" size="10" style="width: 225px" />
+            </td>
+            <td valign="top">
+                <p id="pPriority" style="color:red;font-size:150%;"></p>
+            </td>
+        </tr>
+        <tr><td colspan="3">&nbsp;</td></tr>
+        <tr>
+            <td valign="top">Please choose a subcategory: </td>
+            <td>
+                <select id="selSubcategories" onchange="load_symptoms()" class="subcategories" size="7" style="width: 225px" />
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr><td colspan="3">&nbsp;</td></tr>
+        <tr>
+            <td valign="top">Please choose symptoms: </td>
+            <td colspan="2">
+                <p id="pSymptoms"></p>
+            </td>
+        </tr>
+    </table>
+</body>
